@@ -3,19 +3,21 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import SocialLogin from "@/components/social-login";
-import { Eye, EyeOff } from "lucide-react";
+import SignInButton from "@/components/buttons/signin-b";
+import PasswordLogin from "@/components/input/password_login";
+import BackToHomeButton from "@/components/buttons/home";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -45,6 +47,23 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-black py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
       <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
+        <div className="flex justify-center mt-4 mb-4">
+              <Image src="/convex.ico" alt="logo" width={100} height={100} />
+              <Image
+                src="/betterauth-black.png"
+                alt="logo"
+                width={100}
+                height={100}
+                className="dark:hidden"
+              />
+              <Image
+                src="/betterauth-white.png"
+                alt="logo"
+                width={100}
+                height={100}
+                className="hidden dark:block"
+              />
+            </div>
         <h2 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200">
           Welcome back
         </h2>
@@ -78,36 +97,13 @@ export default function LoginPage() {
             />
           </LabelInputContainer>
 
-          <LabelInputContainer className="mb-8">
-            <Label htmlFor="password">Password</Label>
-            <div className="relative">
-              <Input
-                id="password"
-                name="password"
-                type={isPasswordVisible ? "text" : "password"}
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                aria-invalid={!!error}
-                aria-describedby={error ? "form-error" : undefined}
-                className="pr-24"
-                placeholder="••••••••"
-              />
-              <button
-                type="button"
-                onClick={() => setIsPasswordVisible((v) => !v)}
-                aria-pressed={isPasswordVisible}
-                className="absolute inset-y-0 right-4 my-1 inline-flex items-center rounded-md px-2 text-xs font-medium text-slate-600 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:text-slate-400 dark:hover:text-slate-100"
-              >
-                {isPasswordVisible ? <EyeOff /> : <Eye />}
-              </button>
-            </div>
-          </LabelInputContainer>
+          <PasswordLogin value={password} onChange={setPassword} />
 
-          <button
-            className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] disabled:cursor-not-allowed disabled:opacity-50"
-            type="submit"
+          <SignInButton
+            onClick={() => {
+              const form = document.querySelector('form') as HTMLFormElement;
+              form?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+            }}
             disabled={isLoading}
           >
             {isLoading ? (
@@ -121,33 +117,21 @@ export default function LoginPage() {
             ) : (
               "Sign in"
             )}
-            <BottomGradient />
-          </button>
+          </SignInButton>
           <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
           <SocialLogin />
           <div className="my-8 grid grid-cols-1 gap-3">
-            <Link
-              href="/"
-              className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 text-center leading-10 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
+            <BackToHomeButton
+              onClick={() => router.push("/")}
             >
               Back to home →
-              <BottomGradient />
-            </Link> 
+            </BackToHomeButton> 
           </div>
         </form>
       </div>
     </div>
   );
 }
-
-const BottomGradient = () => {
-  return (
-    <>
-      <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
-      <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
-    </>
-  );
-};
 
 const LabelInputContainer = ({
   children,

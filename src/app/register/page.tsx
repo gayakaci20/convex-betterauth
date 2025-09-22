@@ -3,12 +3,17 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import SocialRegister from "@/components/social-register";
-import { Eye, EyeOff } from "lucide-react";
+import Password from "@/components/input/password";
+import PasswordConfirm from "@/components/input/password_confirm";
+import RegisterButton2 from "@/components/buttons/register-a";
+import BackToHomeButton from "@/components/buttons/home";
+
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -16,8 +21,6 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isConfirmVisible, setIsConfirmVisible] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -31,8 +34,18 @@ export default function RegisterPage() {
       return;
     }
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters long");
+    const requirements = [
+      { regex: /.{8,}/, text: "At least 8 characters" },
+      { regex: /[0-9]/, text: "At least 1 number" },
+      { regex: /[a-z]/, text: "At least 1 lowercase letter" },
+      { regex: /[A-Z]/, text: "At least 1 uppercase letter" },
+    ];
+
+    const unmetRequirements = requirements.filter(req => !req.regex.test(password));
+    
+    if (unmetRequirements.length > 0) {
+      const errorMessages = unmetRequirements.map(req => `${req.text}- Requirement not met`);
+      setError(errorMessages.join('\n'));
       setIsLoading(false);
       return;
     }
@@ -60,6 +73,23 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-black py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
       <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
+        <div className="flex justify-center mt-4 mb-4">
+              <Image src="/convex.ico" alt="logo" width={100} height={100} />
+              <Image
+                src="/betterauth-black.png"
+                alt="logo"
+                width={100}
+                height={100}
+                className="dark:hidden"
+              />
+              <Image
+                src="/betterauth-white.png"
+                alt="logo"
+                width={100}
+                height={100}
+                className="hidden dark:block"
+              />
+            </div>
         <h2 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200">
           Create your account
         </h2>
@@ -96,63 +126,25 @@ export default function RegisterPage() {
           <LabelInputContainer className="mb-4">
             <div className="flex items-center justify-between">
               <Label htmlFor="password">Password</Label>
-              <span className="text-xs text-neutral-500 dark:text-neutral-400">Min. 6 characters</span>
+              <span className="text-xs text-neutral-500 dark:text-neutral-400">Min. 8 characters</span>
             </div>
             <div className="relative">
-              <Input
-                id="password"
-                name="password"
-                type={isPasswordVisible ? "text" : "password"}
-                autoComplete="new-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                aria-invalid={!!error}
-                aria-describedby={error ? "form-error" : undefined}
-                className="pr-24"
-                placeholder="••••••••"
-              />
-              <button
-                type="button"
-                onClick={() => setIsPasswordVisible((v) => !v)}
-                aria-pressed={isPasswordVisible}
-                className="absolute inset-y-0 right-4 my-1 inline-flex items-center rounded-md px-2 text-xs font-medium text-slate-600 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:text-slate-400 dark:hover:text-slate-100"
-              >
-                {isPasswordVisible ? <EyeOff /> : <Eye />}
-              </button>
+              <Password value={password} onChange={setPassword} />
             </div>
           </LabelInputContainer>
 
           <LabelInputContainer className="mb-8">
             <Label htmlFor="confirmPassword">Confirm Password</Label>
             <div className="relative">
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type={isConfirmVisible ? "text" : "password"}
-                autoComplete="new-password"
-                required
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                aria-invalid={!!error}
-                aria-describedby={error ? "form-error" : undefined}
-                className="pr-24"
-                placeholder="••••••••"
-              />
-              <button
-                type="button"
-                onClick={() => setIsConfirmVisible((v) => !v)}
-                aria-pressed={isConfirmVisible}
-                className="absolute inset-y-0 right-4 my-1 inline-flex items-center rounded-md px-2 text-xs font-medium text-slate-600 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:text-slate-400 dark:hover:text-slate-100"
-              >
-                {isConfirmVisible ? <EyeOff /> : <Eye />}
-              </button>
+              <PasswordConfirm originalPassword={password} value={confirmPassword} onChange={setConfirmPassword} />
             </div>
           </LabelInputContainer>
 
-          <button
-            className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] disabled:cursor-not-allowed disabled:opacity-50"
-            type="submit"
+          <RegisterButton2
+            onClick={() => {
+              const form = document.querySelector('form') as HTMLFormElement;
+              form?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+            }}
             disabled={isLoading}
           >
             {isLoading ? (
@@ -164,20 +156,17 @@ export default function RegisterPage() {
                 Creating account...
               </span>
             ) : (
-              "Create account →"
+              "Create account"
             )}
-            <BottomGradient />
-          </button>
+          </RegisterButton2>
           <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
           <SocialRegister />
           <div className="my-8 grid grid-cols-1 gap-3">
-            <Link
-              href="/"
-              className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 text-center leading-10 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
+            <BackToHomeButton
+              onClick={() => router.push("/")}
             >
               Back to home →
-              <BottomGradient />
-            </Link> 
+            </BackToHomeButton> 
           </div>
         </form>
       </div>

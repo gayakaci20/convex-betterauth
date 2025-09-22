@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { LoaderOne } from "@/components/ui/loader";
 import DarkModeToggle from "@/components/darkmode-toggle";
+import SignInButton from "@/components/buttons/signin-b";
+import CreateAccountButton from "@/components/buttons/register-b";
 
 function AuthenticatedContent() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -76,20 +78,8 @@ function AuthenticatedContent() {
           </p>
             <BottomGradient />
           <div className="my-8 grid grid-cols-1 gap-3">
-            <Link
-              href="/login"
-              className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 text-center leading-10 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
-            >
-              Sign in →
-              <BottomGradient />
-            </Link>
-            <Link
-              href="/register"
-              className="group/btn shadow-input relative flex h-10 w-full items-center justify-center space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_#262626]"
-            >
-              Create account
-              <BottomGradient />
-            </Link>
+            <SignInButton onClick={() => router.push("/login")}/>
+            <CreateAccountButton onClick={() => router.push("/register")}/>
           </div>
         </div>
       </div>
@@ -114,22 +104,22 @@ function AuthenticatedContent() {
               </button>
             </div>
 
-            <div className="mt-8 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4">
+            <div className="mt-8 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-black p-4">
               <h2 className="text-base font-medium text-slate-900 dark:text-slate-100">User information</h2>
               <dl className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-700 p-3">
+                <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3">
                   <dt className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">User ID</dt>
                   <dd className="mt-1 text-sm text-slate-900 dark:text-slate-100 break-words font-mono">{user._id}</dd>
                 </div>
-                <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-700 p-3">
+                <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3">
                   <dt className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Email</dt>
                   <dd className="mt-1 text-sm text-slate-900 dark:text-slate-100">{user.email}</dd>
                 </div>
-                <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-700 p-3">
+                <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3">
                   <dt className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Name</dt>
                   <dd className="mt-1 text-sm text-slate-900 dark:text-slate-100">{user.name || "Not set"}</dd>
                 </div>
-                <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-700 p-3">
+                <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3">
                   <dt className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Created</dt>
                   <dd className="mt-1 text-sm text-slate-900 dark:text-slate-100">
                     {user._creationTime ? new Date(user._creationTime).toLocaleDateString() : "Unknown"}
