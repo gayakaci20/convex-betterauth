@@ -1,7 +1,7 @@
 # Convex + BetterAuth
 
-#<img src="public/convex.ico" width="45" height="45" style="vertical-align:middle">
-#<img src="public/betterauth-white.png" width="45" height="45" style="vertical-align:middle">
+<img src="public/convex.ico" width="100" height="100" style="vertical-align:middle">
+<img src="public/betterauth-white.png" width="100" height="100" style="vertical-align:middle">
 
 A modern authentication application built with Next.js, featuring Convex as the backend-as-a-service and BetterAuth for authentication management. This project demonstrates a complete authentication flow with user registration, login, and session management.
 
