@@ -44,6 +44,12 @@ export default function LoginPage() {
     }
   };
 
+  const handleSocialSignIn = async (provider: string) => {
+    await authClient.signIn.social({
+      provider,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-black py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
       <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
@@ -118,16 +124,17 @@ export default function LoginPage() {
               "Sign in"
             )}
           </SignInButton>
-          <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
-          <SocialLogin />
-          <div className="my-8 grid grid-cols-1 gap-3">
-            <BackToHomeButton
-              onClick={() => router.push("/")}
-            >
-              Back to home →
-            </BackToHomeButton> 
-          </div>
         </form>
+
+        <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
+        <SocialLogin onClick={handleSocialSignIn} />
+        <div className="my-8 grid grid-cols-1 gap-3">
+          <BackToHomeButton
+            onClick={() => router.push("/")}
+          >
+            Back to home →
+          </BackToHomeButton>
+        </div>
       </div>
     </div>
   );

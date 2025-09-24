@@ -51,7 +51,7 @@ function AuthenticatedContent() {
   if (!isAuthenticated || !user) {
     return (
       <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center px-4">
-        <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black ">
+        <div className="shadow-input mx-auto w-full max-w-xl rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
           <div className="flex justify-center">
             <DarkModeToggle />
           </div>
@@ -73,7 +73,7 @@ function AuthenticatedContent() {
               />
             </div>
           <h2 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200 text-center mt-4">Convex + BetterAuth</h2>
-          <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300 text-center">
+          <p className="mt-2 max-w-xl text-sm text-neutral-600 dark:text-neutral-300 text-center">
             Open Source Authentication for your Next.js app by <Link href="https://github.com/gayakaci20" className="text-neutral-600 dark:text-neutral-300 font-bold">Gaya KACI</Link>
           </p>
             <BottomGradient />

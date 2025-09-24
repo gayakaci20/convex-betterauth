@@ -14,7 +14,6 @@ import PasswordConfirm from "@/components/input/password_confirm";
 import RegisterButton2 from "@/components/buttons/register-a";
 import BackToHomeButton from "@/components/buttons/home";
 
-
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,7 +41,7 @@ export default function RegisterPage() {
     ];
 
     const unmetRequirements = requirements.filter(req => !req.regex.test(password));
-    
+
     if (unmetRequirements.length > 0) {
       const errorMessages = unmetRequirements.map(req => `${req.text}- Requirement not met`);
       setError(errorMessages.join('\n'));
@@ -63,11 +62,16 @@ export default function RegisterPage() {
         router.push("/");
       }
     } catch (err) {
-      console.error("Registration error:", err);
       setError(err instanceof Error ? err.message : "An unexpected error occurred");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSocialSignUp = async (provider: string) => {
+    await authClient.signIn.social({
+      provider,
+    });
   };
 
   return (
@@ -159,16 +163,17 @@ export default function RegisterPage() {
               "Create account"
             )}
           </RegisterButton2>
-          <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
-          <SocialRegister />
-          <div className="my-8 grid grid-cols-1 gap-3">
-            <BackToHomeButton
-              onClick={() => router.push("/")}
-            >
-              Back to home →
-            </BackToHomeButton> 
-          </div>
         </form>
+
+        <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
+        <SocialRegister onClick={handleSocialSignUp} />
+        <div className="my-8 grid grid-cols-1 gap-3">
+          <BackToHomeButton
+            onClick={() => router.push("/")}
+          >
+            Back to home →
+          </BackToHomeButton>
+        </div>
       </div>
     </div>
   );
